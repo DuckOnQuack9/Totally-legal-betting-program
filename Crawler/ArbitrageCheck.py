@@ -77,10 +77,8 @@ def arbitrage(gamesList):
         
         odds.append(
             [round(1/mgmDecOdds1 * 100 + 1/mgmDecOdds2 * 100, 2),
-            round(1/mgmDecOdds1 * 100 + 1/dkDecOdds1 * 100, 2),
             round(1/mgmDecOdds1 * 100 + 1/dkDecOdds2 * 100, 2),
             round(1/mgmDecOdds2 * 100 + 1/dkDecOdds1 * 100, 2),
-            round(1/mgmDecOdds2 * 100 + 1/dkDecOdds2 * 100, 2),
             round(1/dkDecOdds1 * 100 + 1/dkDecOdds2 * 100, 2)]
         )
         name = game[0][0] + " vs " + game[1][0]
