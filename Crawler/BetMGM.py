@@ -4,7 +4,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import numpy as np
-import time
 import sys
 
 class BetMGMScraper:
@@ -14,19 +13,16 @@ class BetMGMScraper:
         self.table = None
         self.tableRows = None
 
-    def get_table_rows(self):
-        try:
-            self.table = WebDriverWait(self.driver, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="main-view"]/ms-widget-layout/ms-widget-slot/ms-composable-widget/ms-widget-slot[2]/ms-tabbed-grid-widget/ms-grid/div/ms-event-group[1]')))
-        except TimeoutException:
-            pass
+    def get_table_rows(self, table):
+        self.table = WebDriverWait(self.driver, 3).until(EC.presence_of_element_located((By.XPATH, table)))
 
         self.tableRows = self.table.find_elements(By.XPATH, './*')
 
     def get_info(self, tr):
-        moneyPath1 = f'//*[@id="main-view"]/ms-widget-layout/ms-widget-slot/ms-composable-widget/ms-widget-slot[2]/ms-tabbed-grid-widget/ms-grid/div/ms-event-group[1]/ms-six-pack-event[{tr}]/div/div/div/ms-option-group[3]/ms-option[1]/ms-event-pick/div/div[2]/ms-font-resizer'
-        moneyPath2 = f'//*[@id="main-view"]/ms-widget-layout/ms-widget-slot/ms-composable-widget/ms-widget-slot[2]/ms-tabbed-grid-widget/ms-grid/div/ms-event-group[1]/ms-six-pack-event[{tr}]/div/div/div/ms-option-group[3]/ms-option[2]/ms-event-pick/div/div[2]/ms-font-resizer'
-        teamPath1 = f'//*[@id="main-view"]/ms-widget-layout/ms-widget-slot/ms-composable-widget/ms-widget-slot[2]/ms-tabbed-grid-widget/ms-grid/div/ms-event-group[1]/ms-six-pack-event[{tr}]/div/a/ms-event-detail/ms-event-name/ms-inline-tooltip/div/div[1]/div/div'
-        teamPath2 = f'//*[@id="main-view"]/ms-widget-layout/ms-widget-slot/ms-composable-widget/ms-widget-slot[2]/ms-tabbed-grid-widget/ms-grid/div/ms-event-group[1]/ms-six-pack-event[{tr}]/div/a/ms-event-detail/ms-event-name/ms-inline-tooltip/div/div[2]/div/div'
+        moneyPath1 = f'.//ms-six-pack-event[{tr}]/div/div/div/ms-option-group[3]/ms-option[1]/ms-event-pick/div/div[2]/ms-font-resizer'
+        moneyPath2 = f'.//ms-six-pack-event[{tr}]/div/div/div/ms-option-group[3]/ms-option[2]/ms-event-pick/div/div[2]/ms-font-resizer'
+        teamPath1 = f'.//ms-six-pack-event[{tr}]/div/a/ms-event-detail/ms-event-name/ms-inline-tooltip/div/div[1]/div/div'
+        teamPath2 = f'.//ms-six-pack-event[{tr}]/div/a/ms-event-detail/ms-event-name/ms-inline-tooltip/div/div[2]/div/div'
         moneyLine1 = None
         teamName1 = None
         moneyLine2 = None
@@ -50,8 +46,18 @@ class BetMGMScraper:
 
     def run(self):
         self.driver.get('https://sports.in.betmgm.com/en/sports/baseball-23/betting/usa-9/mlb-75')
-        self.get_table_rows()
-        pyResult = [self.get_info(row) for row in range(1, len(self.tableRows) + 1)]
-        result = np.array(pyResult, dtype=object)
+        divNum = 1
+        resultList = []
+
+        while True:
+            try:
+                self.get_table_rows(f'//*[@id="main-view"]/ms-widget-layout/ms-widget-slot/ms-composable-widget/ms-widget-slot[2]/ms-tabbed-grid-widget/ms-grid/div/ms-event-group[{divNum}]')
+                resultList.append([self.get_info(row) for row in range(1, len(self.tableRows) + 1)])
+
+                divNum += 1
+            except:
+                break
+        
+        # result = np.array(pyResult, dtype=object)
         self.driver.quit()
-        return result
+        return resultList[0]

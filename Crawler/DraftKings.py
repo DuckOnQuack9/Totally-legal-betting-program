@@ -1,5 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 import sys
 import numpy as np
 
@@ -35,6 +38,7 @@ class DraftKingsScraper:
 
         return [teamName, moneyLine]
 
+
     def create_pairs(self):
         combinedList = []
         divNum = 1
@@ -61,16 +65,11 @@ class DraftKingsScraper:
             except:
                 break
 
-        pairs = np.array(combinedList, dtype=object)
-        return pairs
+        # pairs = np.array(combinedList, dtype=object)
+        return combinedList
 
     def run(self):
         self.driver.get('https://sportsbook.draftkings.com/featured?category=game-lines&subcategory=baseball')
         result = self.create_pairs()
         self.driver.quit()
         return result
-
-scraper = DraftKingsScraper()
-print(scraper.run())
-# print(scraper.run(['//*[@id="root"]/section/section[2]/div[2]/section[2]/section[3]/div/div[2]/div/div/div[4]/div[1]/div/div/div[1]/div/div[2]/div/div/div/div[1]/table/tbody',
-#                    '//*[@id="root"]/section/section[2]/div[2]/section[2]/section[3]/div/div[2]/div/div/div[4]/div[1]/div/div/div[1]/div/div[2]/div/div/div/div[2]/table/tbody']))
