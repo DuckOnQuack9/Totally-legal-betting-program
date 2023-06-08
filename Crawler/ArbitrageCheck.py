@@ -3,67 +3,7 @@ import numpy as np
 from queue import Queue
 from BetMGM import BetMGMScraper
 from DraftKings import DraftKingsScraper
-mlb_cities = {
-    'Los Angeles': '',
-    'Texas': '',
-    'Atlanta': '',
-    'Baltimore': '',
-    'Boston': '',
-    'New York': '',
-    'Chicago': '',
-    'Cincinnati': '',
-    'Cleveland': '',
-    'Colorado': '',
-    'Detroit': '',
-    'New York': '',
-    'Houston': '',
-    'Kansas City': '',
-    'Los Angeles': '',
-    'Miami': '',
-    'Milwaukee': '',
-    'Minnesota': '',
-    'Oakland': '',
-    'Philadelphia': '',
-    'Arizona': '',
-    'Pittsburgh': '',
-    'San Diego': '',
-    'San Francisco': '',
-    'Seattle': '',
-    'St. Louis': '',
-    'Tampa Bay': '',
-    'Toronto': '',
-    'Washington': ''
-}
-mlb_abrev = {
-    'LA': '',
-    'TEX': '',
-    'ATL': '',
-    'BAL': '',
-    'BOS': '',
-    'NY': '',
-    'CHI': '',
-    'CIN': '',
-    'CLE': '',
-    'COL': '',
-    'DET': '',
-    'HOU': '',
-    'KC': '',
-    'MIA': '',
-    'MIL': '',
-    'MIN': '',
-    'OAK': '',
-    'PHI': '',
-    'ARI': '',
-    'PIT': '',
-    'SD': '',
-    'SF': '',
-    'SEA': '',
-    'STL': '',
-    'TB': '',
-    'TOR': '',
-    'WAS': ''
-}
-
+from Dictionaries import mlb_abrev, mlb_cities
 
 def run_dk_scraper(output_queue):
     DKScraper = DraftKingsScraper()
@@ -135,12 +75,12 @@ def arbitrage(gamesList):
         print(mgmDecOdds1, mgmDecOdds2, dkDecOdds1, dkDecOdds2)
         
         odds.append(
-            [1/mgmDecOdds1 * 100 + 1/mgmDecOdds2 * 100,
-            1/mgmDecOdds1 * 100 + 1/dkDecOdds1 * 100,
-            1/mgmDecOdds1 * 100 + 1/dkDecOdds2 * 100,
-            1/mgmDecOdds2 * 100 + 1/dkDecOdds1 * 100,
-            1/mgmDecOdds2 * 100 + 1/dkDecOdds2 * 100,
-            1/dkDecOdds1 * 100 + 1/dkDecOdds2 * 100]
+            [round(1/mgmDecOdds1 * 100 + 1/mgmDecOdds2 * 100, 2),
+            round(1/mgmDecOdds1 * 100 + 1/dkDecOdds1 * 100, 2),
+            round(1/mgmDecOdds1 * 100 + 1/dkDecOdds2 * 100, 2),
+            round(1/mgmDecOdds2 * 100 + 1/dkDecOdds1 * 100, 2),
+            round(1/mgmDecOdds2 * 100 + 1/dkDecOdds2 * 100, 2),
+            round(1/dkDecOdds1 * 100 + 1/dkDecOdds2 * 100, 2)]
         )
         
     print(odds)
