@@ -48,9 +48,9 @@ def match_games(dk, betmgm):
                 for key in mlb_abrev:
                     betmgm[mgm_game][mgm_team][0] = betmgm[mgm_game][mgm_team][0].replace(key, mlb_abrev[key]).strip()
     
-    print(dk)
-    print()
-    print(betmgm)
+    # print(dk)
+    # print()
+    # print(betmgm)
     for dk_game in dk:
         for mgm_game in betmgm:
             if dk_game[0][0] == mgm_game[0][0] or mgm_game[0][0] == dk_game[0][0]:
@@ -59,8 +59,9 @@ def match_games(dk, betmgm):
     return gamesList
 
 def arbitrage(gamesList):
-    odds = []
+    dict = {}
     for game in gamesList:
+        odds = []
         mgmOdds1 = int(game[0][1])
         mgmOdds2 = int(game[1][1])
         dkOdds1 = int(game[2][1])
@@ -72,7 +73,7 @@ def arbitrage(gamesList):
         dkDecOdds1 = 100 / abs(dkOdds1) + 1 if dkOdds1 < 0 else (dkOdds1 / 100) + 1
         dkDecOdds2 = 100 / abs(dkOdds2) + 1 if dkOdds2 < 0 else (dkOdds2 / 100) + 1
 
-        print(mgmDecOdds1, mgmDecOdds2, dkDecOdds1, dkDecOdds2)
+        # print(mgmDecOdds1, mgmDecOdds2, dkDecOdds1, dkDecOdds2)
         
         odds.append(
             [round(1/mgmDecOdds1 * 100 + 1/mgmDecOdds2 * 100, 2),
@@ -82,13 +83,11 @@ def arbitrage(gamesList):
             round(1/mgmDecOdds2 * 100 + 1/dkDecOdds2 * 100, 2),
             round(1/dkDecOdds1 * 100 + 1/dkDecOdds2 * 100, 2)]
         )
-        
-    print(odds)
-    return min(odds[0])
+        name = game[0][0] + " vs " + game[1][0]
+        dict[name] = min(odds[0])
 
+    return dict
 
 # Process the results as needed
 gameList = match_games(dk_result, mgm_result)
-print(gameList)
-print()
 print(arbitrage(gameList))
