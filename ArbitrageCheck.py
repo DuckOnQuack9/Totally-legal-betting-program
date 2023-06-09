@@ -1,5 +1,5 @@
 import threading
-import numpy as np
+import pprint
 from queue import Queue
 from BetMGM import BetMGMScraper
 from DraftKings import DraftKingsScraper
@@ -62,6 +62,7 @@ def arbitrage(gamesList):
     dict = {}
     for game in gamesList:
         odds = []
+        newdict = {}
         mgmOdds1 = int(game[0][1])
         mgmOdds2 = int(game[1][1])
         dkOdds1 = int(game[2][1])
@@ -76,16 +77,27 @@ def arbitrage(gamesList):
         # print(mgmDecOdds1, mgmDecOdds2, dkDecOdds1, dkDecOdds2)
         
         odds.append(
-            [round(1/mgmDecOdds1 * 100 + 1/mgmDecOdds2 * 100, 2),
-            round(1/mgmDecOdds1 * 100 + 1/dkDecOdds2 * 100, 2),
-            round(1/mgmDecOdds2 * 100 + 1/dkDecOdds1 * 100, 2),
-            round(1/dkDecOdds1 * 100 + 1/dkDecOdds2 * 100, 2)]
+            [round(1/mgmDecOdds1 * 100 + 1/dkDecOdds2 * 100, 2),
+            round(1/mgmDecOdds2 * 100 + 1/dkDecOdds1 * 100, 2),]
         )
         name = game[0][0] + " vs " + game[1][0]
-        dict[name] = min(odds[0])
+
+        if odds[0][0] < odds[0][1]:
+            stake1 = [100 * 1/mgmDecOdds1 * 100 / min(odds[0]), 'MGM1']
+            stake2 = [100 * 1/dkDecOdds2 * 100 / min(odds[0]), 'DK2']
+
+        if odds[0][0] > odds[0][1]:
+            stake1 = [round(100 * 1/mgmDecOdds2 * 100 / min(odds[0]), 2), 'MGM2']
+            stake2 = [round(100 * 1/dkDecOdds1 * 100 / min(odds[0]), 2), 'DK1']
+
+        newdict['profit'] = str(round(100/min(odds[0]), 2)) + '$'
+        newdict['arbitrage'] = str(min(odds[0])) + '%'
+        newdict[game[0][0]] = [str(stake1[0]) + '$', stake1[1]]
+        newdict[game[1][0]] = [str(stake2[0]) + '$', stake2[1]]
+        dict[name] = newdict
 
     return dict
 
 # Process the results as needed
 gameList = match_games(dk_result, mgm_result)
-print(arbitrage(gameList))
+pprint.pprint(arbitrage(gameList))
