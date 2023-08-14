@@ -8,11 +8,20 @@ import numpy as np
 
 class DraftKingsScraper:
     def __init__(self):
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        self.driver = webdriver.Chrome(chrome_options=chrome_options)
+        chromeOptions = webdriver.ChromeOptions() 
+        chromeOptions.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2}) 
+        chromeOptions.add_argument("--no-sandbox") 
+        chromeOptions.add_argument("--disable-setuid-sandbox") 
+
+        chromeOptions.add_argument("--remote-debugging-port=9222")  # this
+
+        chromeOptions.add_argument("--disable-dev-shm-using") 
+        chromeOptions.add_argument("--disable-extensions") 
+        chromeOptions.add_argument("--disable-gpu") 
+        chromeOptions.add_argument("start-maximized") 
+        chromeOptions.add_argument("disable-infobars")
+        chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
+        self.driver = webdriver.Chrome(chrome_options=chromeOptions)
         self.encoding = sys.stdout.encoding
         self.table = None
         self.tableRows = None
