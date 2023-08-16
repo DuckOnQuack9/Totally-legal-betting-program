@@ -21,7 +21,7 @@ class DraftKingsScraper:
         chromeOptions.add_argument("start-maximized") 
         chromeOptions.add_argument("disable-infobars")
         chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
-        self.driver = webdriver.Chrome(chrome_options=chromeOptions)
+        self.driver = webdriver.Chrome(options=chromeOptions)
         self.encoding = sys.stdout.encoding
         self.table = None
         self.tableRows = None
