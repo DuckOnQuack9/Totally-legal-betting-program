@@ -11,7 +11,7 @@ class BetMGMScraper:
         chromeOptions = webdriver.ChromeOptions() 
         chromeOptions.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2}) 
         chromeOptions.add_argument("--no-sandbox")
-        chrome_options.add_argument('--headless')
+        chromeOptions.add_argument('--headless')
         chromeOptions.add_argument("--disable-setuid-sandbox") 
 
         chromeOptions.add_argument("--remote-debugging-port=9222")  # this
