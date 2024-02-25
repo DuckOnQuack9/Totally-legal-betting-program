@@ -11,10 +11,10 @@ class BetMGMScraper:
         chromeOptions = webdriver.ChromeOptions() 
         chromeOptions.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2}) 
         chromeOptions.add_argument("--no-sandbox")
-        chromeOptions.add_argument('--headless')
+        # chromeOptions.add_argument('--headless')
         chromeOptions.add_argument("--disable-setuid-sandbox") 
 
-        chromeOptions.add_argument("--remote-debugging-port=9222")  # this
+        chromeOptions.add_argument("--remote-debugging-port=9222")
 
         chromeOptions.add_argument("--disable-dev-shm-using") 
         chromeOptions.add_argument("--disable-extensions") 
@@ -28,7 +28,7 @@ class BetMGMScraper:
         self.tableRows = None
 
     def get_table_rows(self, table):
-        self.table = WebDriverWait(self.driver, 3).until(EC.presence_of_element_located((By.XPATH, table)))
+        self.table = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, table)))
 
         self.tableRows = self.table.find_elements(By.XPATH, './*')
 
@@ -75,3 +75,7 @@ class BetMGMScraper:
         # result = np.array(pyResult, dtype=object)
         self.driver.quit()
         return resultList[0]
+    
+# A way to run the scraper for debugging purposes
+# scraper = BetMGMScraper()
+# pprint.pprint(scraper.run())
