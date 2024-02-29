@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+import pprint
 import numpy as np
 import sys
 
@@ -21,7 +22,6 @@ class BetMGMScraper:
         chromeOptions.add_argument("--disable-gpu") 
         chromeOptions.add_argument("start-maximized") 
         chromeOptions.add_argument("disable-infobars")
-        chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
         self.driver = webdriver.Chrome(options=chromeOptions)
         self.encoding = sys.stdout.encoding
         self.table = None
@@ -59,7 +59,7 @@ class BetMGMScraper:
         return [[teamName1, moneyLine1], [teamName2, moneyLine2]]
 
     def run(self):
-        self.driver.get('https://sports.in.betmgm.com/en/sports/baseball-23/betting/usa-9/mlb-75')
+        self.driver.get('https://sports.in.betmgm.com/en/sports/baseball-23/betting/usa-9/college-baseball-5909')
         divNum = 1
         resultList = []
 
@@ -74,8 +74,8 @@ class BetMGMScraper:
         
         # result = np.array(pyResult, dtype=object)
         self.driver.quit()
-        return resultList[0]
+        return resultList
     
 # A way to run the scraper for debugging purposes
-# scraper = BetMGMScraper()
-# pprint.pprint(scraper.run())
+scraper = BetMGMScraper()
+pprint.pprint(scraper.run())
