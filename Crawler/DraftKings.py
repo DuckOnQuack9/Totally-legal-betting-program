@@ -11,8 +11,8 @@ class DraftKingsScraper:
     def __init__(self):
         chromeOptions = webdriver.ChromeOptions() 
         chromeOptions.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2}) 
-        chromeOptions.add_argument("--no-sandbox")
-        chromeOptions.add_argument('--headless')
+        # chromeOptions.add_argument("--no-sandbox")
+        # chromeOptions.add_argument('--headless')
         chromeOptions.add_argument("--disable-setuid-sandbox") 
 
         chromeOptions.add_argument("--remote-debugging-port=9222")
@@ -22,7 +22,6 @@ class DraftKingsScraper:
         chromeOptions.add_argument("--disable-gpu") 
         chromeOptions.add_argument("start-maximized") 
         chromeOptions.add_argument("disable-infobars")
-        chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
         self.driver = webdriver.Chrome(options=chromeOptions)
         self.encoding = sys.stdout.encoding
         self.table = None
@@ -37,10 +36,10 @@ class DraftKingsScraper:
     # Creates an array of the teamName and moneyLine of a single row
     def get_info(self, tr):
         moneyPath = f'.//tr[{tr}]/td[3]/div/div/div/div/div[2]/span'
-        teamPath = f'.//tr[{tr}]/th/a/div/div[2]/div/span/div/div'
+        teamPath = f'.//tr[{tr}]/th/a/div/div[2]/div/div/div/div'
 
         # Complete xpaths for the moneyPath and the teamPath
-        # //*[@id="root"]/section/section[2]/div[2]/section[2]/section[2]/div/div[2]/div/div/div[4]/div[1]/div/div/div/div/div[2]/div/div/div/div/table/tbody/tr[1]/td[3]/div/div/div/div/div[2]/span
+        # //*[@id="root"]/section/section[2]/div[2]/section[2]/section[3]/div/div[2]/div/div/div[4]/div[1]/div/div/div/div/div[2]/div/div/div/div[1]/table/tbody/tr[1]/th/a/div/div[2]/div/div/div/div
         # //*[@id="root"]/section/section[2]/div[2]/section[2]/section[2]/div/div[2]/div/div/div[4]/div[1]/div/div/div/div/div[2]/div/div/div/div/table/tbody/tr[1]/th/a/div/div[2]/div/div/div/div
         
         moneyLine = None
@@ -61,7 +60,7 @@ class DraftKingsScraper:
 
         return [teamName, moneyLine]
 
-    # Populates an array with all the return of get_info
+    # Populates an array with the return of get_info
     def create_pairs(self):
         combinedList = []
         divNum = 1
@@ -82,11 +81,11 @@ class DraftKingsScraper:
                 # Incriments by 2 so that it creates the pairs without an out of bounds error
                 for item in range(0, len(teams), 2):
                     if item + 1 < len(teams):
-                        pair = [teams[x], teams[x+1]]
+                        pair = [teams[item], teams[item+1]]
 
                     # Appends none to the pair if the site is missing a number for any reason i.e. updating the odds
                     else:
-                        pair = [teams[x], None]
+                        pair = [teams[item], None]
 
                     combinedList.append(pair)
 
